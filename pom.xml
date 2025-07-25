@@ -10,7 +10,7 @@
   </parent>
   <scm>
   <connection>scm:git@github.com:Devkans/spring-petclinic.git</connection>
-  <developerConnection>scm:git@github.com:Devkans/spring-petclinic.git</developerConnection>
+  <developerConnection>scm:git:git@github.com:Devkans/spring-petclinic.git</developerConnection>
   <url>git@github.com:Devkans/spring-petclinic.git</url>
   <tag>HEAD</tag>
 </scm>
@@ -43,7 +43,20 @@
     <spring-format.version>0.0.46</spring-format.version>
 
   </properties>
-
+  
+  <distributionManagement>
+   <repository>
+     <id>github</id>
+     <name>GitHub OWNER Apache Maven Packages</name>
+     <url>https://maven.pkg.github.com/Devkans/spring-petclinic</url>
+  
+      </repository>
+       <snapshotRepository>
+     <id>github</id>
+     <name>GitHub OWNER Apache Maven Packages</name>
+     <url>https://maven.pkg.github.com/Devkans/spring-petclinic</url>
+   </snapshotRepository>
+</distributionManagement>
   <dependencies>
     <!-- Spring and Spring Boot dependencies -->
     <dependency>
@@ -160,7 +173,7 @@
         <artifactId>maven-release-plugin</artifactId>
         <version>3.0.1</version>
         <configuration>
-          <autoVersionSubmodules>true</autoVersionSubmodules>
+          <localCheckout>true</localCheckout>
         </configuration>
       </plugin>
       <plugin>
