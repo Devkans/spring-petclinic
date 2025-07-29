@@ -6,12 +6,17 @@
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>3.5.0</version>
-    <relativePath></relativePath>
+    <relativePath />
   </parent>
-
+  <scm>
+  <connection>scm:git@github.com:Devkans/spring-petclinic.git</connection>
+  <developerConnection>scm:git:git@github.com:Devkans/spring-petclinic.git</developerConnection>
+  <url>git@github.com:Devkans/spring-petclinic.git</url>
+  <tag>pet-clinic-1.2</tag>
+</scm>
   <groupId>org.springframework.samples</groupId>
   <artifactId>spring-petclinic</artifactId>
-  <version>3.5.0-SNAPSHOT</version>
+  <version>124-SNAPSHOT</version>
 
   <name>petclinic</name>
 
@@ -22,7 +27,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <!-- Important for reproducible builds. Update using e.g. ./mvnw versions:set -DnewVersion=... -->
-    <project.build.outputTimestamp>2024-11-28T14:37:52Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2025-07-26T01:21:07Z</project.build.outputTimestamp>
 
     <!-- Web dependencies -->
     <webjars-locator.version>1.1.0</webjars-locator.version>
@@ -38,7 +43,20 @@
     <spring-format.version>0.0.46</spring-format.version>
 
   </properties>
-
+  
+  <distributionManagement>
+   <repository>
+     <id>github</id>
+     <name>GitHub OWNER Apache Maven Packages</name>
+     <url>https://maven.pkg.github.com/Devkans/spring-petclinic</url>
+  
+      </repository>
+       <snapshotRepository>
+     <id>github</id>
+     <name>GitHub OWNER Apache Maven Packages</name>
+     <url>https://maven.pkg.github.com/Devkans/spring-petclinic</url>
+   </snapshotRepository>
+</distributionManagement>
   <dependencies>
     <!-- Spring and Spring Boot dependencies -->
     <dependency>
@@ -150,6 +168,14 @@
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>3.0.1</version>
+        <configuration>
+          <localCheckout>true</localCheckout>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
@@ -406,7 +432,7 @@
                         </goals>
                       </pluginExecutionFilter>
                       <action>
-                        <ignore></ignore>
+                        <ignore />
                       </action>
                     </pluginExecution>
                     <pluginExecution>
@@ -419,7 +445,7 @@
                         </goals>
                       </pluginExecutionFilter>
                       <action>
-                        <ignore></ignore>
+                        <ignore />
                       </action>
                     </pluginExecution>
                     <pluginExecution>
@@ -432,7 +458,7 @@
                         </goals>
                       </pluginExecutionFilter>
                       <action>
-                        <ignore></ignore>
+                        <ignore />
                       </action>
                     </pluginExecution>
                   </pluginExecutions>
