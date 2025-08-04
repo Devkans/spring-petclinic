@@ -12,11 +12,11 @@
   <connection>scm:git@github.com:Devkans/spring-petclinic.git</connection>
   <developerConnection>scm:git:git@github.com:Devkans/spring-petclinic.git</developerConnection>
   <url>git@github.com:Devkans/spring-petclinic.git</url>
-  <tag>4.0.4-SNAPSHOT</tag>
+  <tag>pet-clinic1</tag>
 </scm>
   <groupId>org.springframework.samples</groupId>
   <artifactId>spring-petclinic</artifactId>
-  <version>4.0.2</version>
+  <version>4.0.5-SNAPSHOT</version>
 
   <name>petclinic</name>
 
@@ -27,7 +27,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <!-- Important for reproducible builds. Update using e.g. ./mvnw versions:set -DnewVersion=... -->
-    <project.build.outputTimestamp>2025-08-04T08:58:27Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2025-08-04T08:58:51Z</project.build.outputTimestamp>
 
     <!-- Web dependencies -->
     <webjars-locator.version>1.1.0</webjars-locator.version>
