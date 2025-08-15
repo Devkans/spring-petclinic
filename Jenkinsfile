@@ -10,7 +10,7 @@ pipeline {
             steps {
                 checkout scm
                 script {
-                    env.SHORT_GIT_COMMIT = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+                    env.SHORT_GIT_COMMIT = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim() // short commit hash
                 }
             }
         }
@@ -22,7 +22,7 @@ pipeline {
             }
             steps {
                 sh 'mvn checkstyle:checkstyle'
-                archiveArtifacts artifacts: 'target/checkstyle-result.xml', fingerprint: true
+                archiveArtifacts artifacts: 'target/checkstyle-result.xml' // archive checkstyle result
             }
         }
 
@@ -58,13 +58,13 @@ pipeline {
                 withCredentials([usernamePassword(
                     credentialsId: 'dockerhub-creds',
                     usernameVariable: 'DOCKERHUB_USERNAME',
-                    passwordVariable: 'DOCKERHUB_PASSWORD'
+                    passwordVariable: 'DOCKERHUB_PASSWORD' 
                 )]) {
                     sh """
-                        echo "${DOCKERHUB_PASSWORD}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
+                        echo "${DOCKERHUB_PASSWORD}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin 
                         docker push ${DOCKERHUB_USER}/${env.BRANCH_NAME == 'main' ? 'main' : 'mr'}:${SHORT_GIT_COMMIT}
                     """
-                }
+                } // if branch is main, push to main repo, else push to mr repo 
             }
         }
     }
