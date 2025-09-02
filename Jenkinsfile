@@ -47,11 +47,11 @@ pipeline {
             steps {
                 script {
                     if (env.CHANGE_ID) {
-                        env.IMAGE_NAME = "${NEXUS_MAIN}/${DOCKER_MR_REPO}:${SHORT_GIT_COMMIT}"
-                        env.NEXUS_PUSH = "${NEXUS_MAIN}"
-                    } else {
-                        env.IMAGE_NAME = "${NEXUS_MR}/${DOCKER_MAIN_REPO}:${SHORT_GIT_COMMIT}"
+                        env.IMAGE_NAME = "${NEXUS_MR}/${DOCKER_MR_REPO}:${SHORT_GIT_COMMIT}"
                         env.NEXUS_PUSH = "${NEXUS_MR}"
+                    } else {
+                        env.IMAGE_NAME = "${NEXUS_MAIN}/${DOCKER_MAIN_REPO}:${SHORT_GIT_COMMIT}"
+                        env.NEXUS_PUSH = "${NEXUS_MAIN}"
                     }
                     sh "docker -H unix:///Users/argevorgyan/.rd/docker.sock build -t ${IMAGE_NAME} ."
                 }
