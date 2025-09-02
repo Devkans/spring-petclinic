@@ -13,6 +13,8 @@ services:
       SPRING_PROFILES_ACTIVE: postgres
     depends_on:
       - postgres
+    networks:
+      - spring-network
     env_file:
       - .env
 
@@ -22,6 +24,8 @@ services:
       POSTGRES_DB: petclinic
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    networks:
+      - spring-network
     env_file:
       - .env
     volumes:
@@ -30,9 +34,11 @@ services:
   nexus:
     image: sonatype/nexus3
     container_name: nexus
+    networks:
+      - spring-network
     ports:
       - "8081:8081"
-      - "8443:8443"
+      - "8443:443"
       - "5001:5001"
       - "5011:5011"
       - "5012:5012"
@@ -41,5 +47,26 @@ services:
       - ~/nexus-ssl/jetty.xml:/opt/sonatype/nexus/etc/jetty/jetty-https.xml    # Mount host etc folder
     restart: always
 
+  jenkins-agent:
+    image: jenkins/agent
+    container_name: jenkins-agent
+    networks:
+      - spring-network
+    environment:
+    - JENKINS_URL=localhost:8080   
+    - JENKINS_SECRET=${JENKINS_AGENT_SECRET}
+    - JENKINS_AGENT_NAME=local-agent
+    volumes: 
+    - ./jenkins_home:/home/jenkins
+    command: >
+      java -jar /usr/share/jenkins/agent.jar
+      -jnlpUrl $JENKINS_URL/computer/$JENKINS_AGENT_NAME/slave-agent.jnlp
+      -secret $JENKINS_SECRET
+      -workDir /home/jenkins
+
 volumes:
   postgres_container:
+
+networks:
+  spring-network:
+    driver: bridge

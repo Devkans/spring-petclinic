@@ -2,7 +2,8 @@ pipeline {
     agent any
 
     environment {
-        NEXUS_REGISTRY   = '${NEXUS_PATH}'   // приходит из Jenkins var/credential
+        NEXUS_MAIN   = 'host.docker.internal:5001'
+        NEXUS_MR     = 'host.docker.internal:5011'
         DOCKER_MAIN_REPO = 'docker-main'
         DOCKER_MR_REPO   = 'docker-mr'
     }
@@ -30,9 +31,7 @@ pipeline {
             }
             post {
                 always {
-                    // публикуем отчёты JUnit для Jenkins Test Result
                     junit 'target/surefire-reports/*.xml'
-                    // архивируем как артефакты для загрузки
                     archiveArtifacts artifacts: 'target/surefire-reports/*.xml', allowEmptyArchive: true
                 }
             }
@@ -48,13 +47,13 @@ pipeline {
             steps {
                 script {
                     if (env.CHANGE_ID) {
-                        // MR build
-                        env.IMAGE_NAME = "${NEXUS_REGISTRY}/${DOCKER_MR_REPO}:${SHORT_GIT_COMMIT}"
+                        env.IMAGE_NAME = "${NEXUS_MAIN}/${DOCKER_MR_REPO}:${SHORT_GIT_COMMIT}"
+                        env.NEXUS_PUSH = "${NEXUS_MAIN}"
                     } else {
-                        // Normal branch build
-                        env.IMAGE_NAME = "${NEXUS_REGISTRY}/${DOCKER_MAIN_REPO}:${SHORT_GIT_COMMIT}"
+                        env.IMAGE_NAME = "${NEXUS_MR}/${DOCKER_MAIN_REPO}:${SHORT_GIT_COMMIT}"
+                        env.NEXUS_PUSH = "${NEXUS_MR}"
                     }
-                    sh "docker build -t ${IMAGE_NAME} ."
+                    sh "docker -H unix:///Users/argevorgyan/.rd/docker.sock build -t ${IMAGE_NAME} ."
                 }
             }
         }
@@ -67,18 +66,26 @@ pipeline {
                     passwordVariable: 'NEXUS_PASSWORD'
                 )]) {
                     sh """
-                        echo "${NEXUS_PASSWORD}" | docker login ${NEXUS_REGISTRY} -u "${NEXUS_USERNAME}" --password-stdin
-                        docker push ${IMAGE_NAME}
+                        echo "${NEXUS_PASSWORD}" | docker -H unix:///Users/argevorgyan/.rd/docker.sock login ${NEXUS_PUSH} -u "${NEXUS_USERNAME}" --password-stdin
+                        docker -H unix:///Users/argevorgyan/.rd/docker.sock push ${IMAGE_NAME}
                     """
                 }
             }
         }
+
         stage('Debug') {
             steps {
                 echo "Branch: ${env.BRANCH_NAME}"
                 echo "Change ID (MR?): ${env.CHANGE_ID}"
                 echo "Image will be pushed to: ${IMAGE_NAME}"
+                sh 'docker -H unix:///Users/argevorgyan/.rd/docker.sock info'
             }
+        }
+    }
+
+    post {
+        always {
+            sh 'docker -H unix:///Users/argevorgyan/.rd/docker.sock logout ${NEXUS_REGISTRY} || true'
         }
     }
 }
