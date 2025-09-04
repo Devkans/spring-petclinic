@@ -78,7 +78,6 @@ pipeline {
                 echo "Branch: ${env.BRANCH_NAME}"
                 echo "Change ID (MR?): ${env.CHANGE_ID}"
                 echo "Image will be pushed to: ${IMAGE_NAME}"
-                sh 'docker -H unix:///Users/argevorgyan/.rd/docker.sock info'
             }
         }
     }
