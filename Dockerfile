@@ -7,8 +7,7 @@ COPY pom.xml .
 
 # Copy settings.xml
 COPY src ./src
-RUN mvn clean package -DskipTests -B
-
+RUN mvn clean package -DskipTests -B -Dmaven.wagon.http.retryHandler.count=5
 #run 
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
