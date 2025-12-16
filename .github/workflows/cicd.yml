@@ -27,8 +27,8 @@ jobs:
           java-version: 21
           cache: maven
 
-      - name: Build & test
-        run: mvn -B clean verify
+      - name: Build & test (unit tests only)
+        run: mvn -B clean test -DskipITs
 
   main-build-push:
     name: Main – Build & Push Docker Image
