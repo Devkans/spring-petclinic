@@ -20,7 +20,7 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Set up JDK 21 (cached Maven)
+      - name: Set up JDK 21 (with Maven cache)
         uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -28,18 +28,19 @@ jobs:
           cache: maven
 
       - name: Build & test (unit tests only)
-        run: mvn -B clean test -DskipITs
+        run: mvn -B clean test -Dspring.profiles.active=test
 
   main-build-push:
     name: Main – Build & Push Docker Image
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
+    needs: pr-build
 
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Set up JDK 21 (cached Maven)
+      - name: Set up JDK 21 (with Maven cache)
         uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -47,7 +48,7 @@ jobs:
           cache: maven
 
       - name: Build application
-        run: mvn -B clean package -DskipTests
+        run: mvn -B clean package -DskipTests -Dspring.profiles.active=test
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
@@ -68,4 +69,4 @@ jobs:
 
       - name: Deploy (placeholder)
         run: |
-          echo "later steps "
+          echo "Manual deployment to VM will happen here"
